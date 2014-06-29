@@ -29,6 +29,7 @@ func makeCreateCmd() *commander.Command {
 	createCmd.Flag.String("osid", "", "os id (* required)")
 	createCmd.Flag.String("dcid", "", "regions id (* required)")
 	createCmd.Flag.String("vpsplanid", "", "plan id (* required)")
+	createCmd.Flag.String("scriptid", "", "script id")
 	return createCmd
 }
 
@@ -65,6 +66,11 @@ var haltCmd = &commander.Command{
 var rebootCmd = &commander.Command{
 	Run:       runPostHandlesubidCmd,
 	UsageLine: "reboot <subid>",
+}
+
+var startupscriptCmd = &commander.Command{
+	Run:       runGetListHandlesubidCmd,
+	UsageLine: "startupscript",
 }
 
 func makeDestroyCmd() *commander.Command {
@@ -160,11 +166,15 @@ func runCreateCmd(cmd *commander.Command, args []string) error {
 	if osid == "" || dcid == "" || vpsplanid == "" {
 		return errors.New("Usage: " + cmd.UsageLine)
 	}
+	scriptid := cmd.Flag.Lookup("scriptid").Value.Get().(string)
 
 	form := url.Values{}
 	form.Set("OSID", osid)
 	form.Set("DCID", dcid)
 	form.Set("VPSPLANID", vpsplanid)
+	if scriptid != "" {
+		form.Set("SCRIPTID", scriptid)
+	}
 
 	r := strings.NewReader(form.Encode())
 

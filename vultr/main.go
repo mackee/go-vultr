@@ -27,6 +27,7 @@ func init() {
 		rebootCmd,
 		makeDestroyCmd(),
 		sshCmd,
+		startupscriptCmd,
 	}
 }
 
